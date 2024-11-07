@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await axios.get(
-      "https://open.api.nexon.com/mabinogi/v1/auction/list",
+      "https://open.api.nexon.com/mabinogi/v1/auction/history",
       {
         headers: {
           "x-nxopen-api-key": process.env.NEXON_API_KEY,

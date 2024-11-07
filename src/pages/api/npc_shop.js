@@ -2,25 +2,25 @@
 import axios from "axios";
 
 export default async function handler(req, res) {
-  const { auction_item_category, item_name, cursor } = req.query;
+  const { npc_name, server_name, channel } = req.query;
 
-  if (!auction_item_category && !item_name) {
+  if (!npc_name || !server_name || !channel) {
     return res.status(400).json({
-      error: "auction_item_category 또는 item_name 중 하나는 필수입니다.",
+      error: "npc_name, server_name, channel 필수입력 입니다",
     });
   }
 
   try {
     const response = await axios.get(
-      "https://open.api.nexon.com/mabinogi/v1/auction/list",
+      "https://open.api.nexon.com/mabinogi/v1/npcshop/list",
       {
         headers: {
           "x-nxopen-api-key": process.env.NEXON_API_KEY,
         },
         params: {
-          auction_item_category,
-          item_name,
-          cursor,
+          npc_name,
+          server_name,
+          channel,
         },
       }
     );
