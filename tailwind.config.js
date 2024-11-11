@@ -10,7 +10,7 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        siamlack: "var(--siamBlack)",
+        siamBlack: "var(--siamBlack)",
       },
     },
   },

@@ -7,7 +7,7 @@ export default function BasicButton({
   return (
     <>
       <button
-        className="font-medium text-center text-white bg-siamlack"
+        className="font-medium text-center text-white bg-siamBlack"
         onClick={onClick}
         style={{
           width: `${width}px`,
