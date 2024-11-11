@@ -1,14 +1,15 @@
 // src/pages/index.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
+import ReactSelect from "@/component/select/ReactSelect";
+import BasicButton from "@/component/button/BasicButton";
 
 export default function Home() {
   const [data, setData] = useState(null);
-  const [categories, setCategories] = useState({}); // 대분류와 소분류를 담은 JSON 데이터
-  const [mainCategory, setMainCategory] = useState(""); // 대분류 선택값
-  const [subCategory, setSubCategory] = useState(""); // 소분류 선택값
+  const [categories, setCategories] = useState({});
+  const [mainCategory, setMainCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
 
-  // JSON 파일에서 카테고리 데이터 가져오기
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -44,43 +45,41 @@ export default function Home() {
   return (
     <div>
       {/* 대분류 선택 */}
-      <select
-        value={mainCategory}
-        onChange={(e) => {
-          setMainCategory(e.target.value);
-          setSubCategory(""); // 대분류 변경 시 소분류 초기화
+      <ReactSelect
+        inputId="main-category-select"
+        placeholder="대분류를 선택하세요"
+        options={Object.keys(categories).map((category) => ({
+          value: category,
+          label: category,
+        }))}
+        value={
+          mainCategory ? { value: mainCategory, label: mainCategory } : null
+        }
+        onChange={(selectedOption) => {
+          setMainCategory(selectedOption.value);
+          setSubCategory("");
         }}
-      >
-        <option value="" disabled>
-          대분류를 선택하세요
-        </option>
-        {Object.keys(categories).map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
+      />
 
       {/* 소분류 선택 */}
-      <select
-        value={subCategory}
-        onChange={(e) => setSubCategory(e.target.value)}
-        disabled={!mainCategory} // 대분류가 선택되지 않으면 비활성화
-      >
-        <option value="" disabled>
-          소분류를 선택하세요
-        </option>
-        {mainCategory &&
-          categories[mainCategory].map((subcategory) => (
-            <option key={subcategory} value={subcategory}>
-              {subcategory}
-            </option>
-          ))}
-      </select>
+      <ReactSelect
+        inputId="sub-category-select"
+        placeholder="소분류를 선택하세요"
+        options={
+          mainCategory
+            ? categories[mainCategory].map((subcategory) => ({
+                value: subcategory,
+                label: subcategory,
+              }))
+            : []
+        }
+        value={subCategory ? { value: subCategory, label: subCategory } : null}
+        onChange={(selectedOption) => setSubCategory(selectedOption.value)}
+        isDisabled={!mainCategory}
+      />
+      <BasicButton onClick={handleSearch} innerText="검색" />
 
-      <button onClick={handleSearch}>검색</button>
-
-      {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : <p>로딩 중...</p>}
+      {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : <p></p>}
     </div>
   );
 }
