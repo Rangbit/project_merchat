@@ -7,7 +7,7 @@ export default function BasicButton({
   return (
     <>
       <button
-        className="font-medium text-center text-white bg-siamBlack"
+        className="font-medium text-center text-white rounded bg-siamBlack hover:bg-semiBlack"
         onClick={onClick}
         style={{
           width: `${width}px`,
