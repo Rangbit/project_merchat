@@ -1,4 +1,3 @@
-// src/pages/api/auction.js
 import axios from "axios";
 
 export default async function handler(req, res) {
@@ -12,15 +11,16 @@ export default async function handler(req, res) {
 
   try {
     const response = await axios.get(
-      "https://open.api.nexon.com/mabinogi/v1/auction/history",
+      "https://open.api.nexon.com/mabinogi/v1/auction/list",
       {
         headers: {
           "x-nxopen-api-key": process.env.NEXON_API_KEY,
+          "Content-Type": "application/json",
         },
         params: {
           auction_item_category,
           item_name,
-          cursor,
+          // cursor,
         },
       }
     );

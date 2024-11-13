@@ -16,6 +16,9 @@ export default function Header() {
         <Link href={"/auction"} passHref>
           <div className="h-full px-8">Auction</div>
         </Link>
+        <Link href={"/auction/history"} passHref>
+          <div className="h-full px-8">Auction History</div>
+        </Link>
         <Link href={"/shop"} passHref>
           <div className="h-full px-8">NPC Shop</div>
         </Link>

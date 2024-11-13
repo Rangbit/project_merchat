@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         params: {
           auction_item_category,
           item_name,
-          cursor,
+          // cursor,
         },
       }
     );

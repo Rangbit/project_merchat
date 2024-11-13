@@ -11,9 +11,10 @@ export default function ReactSelect({
 }) {
   return (
     <Select
+      className="w-[240px] h-[34px]"
       closeMenuOnSelect={true}
       isDisabled={isDisabled}
-      isClearable={true}
+      isClearable={false}
       isSearchable={true}
       instanceId={inputId}
       inputId={inputId}

@@ -1,0 +1,36 @@
+.table {
+  width: 100%;
+  font-size: 0.9em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  border-collapse: collapse;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.header {
+  height: 34px;
+  color: white;
+  background-color: var(--siamBlack);
+}
+
+.header > th:not(:last-child) {
+  border-right: 1px solid #a4a4a4;
+}
+
+.items {
+  height: 48px;
+  background-color: white;
+  border-top: 1px solid #a4a4a4;
+}
+
+.items:hover {
+  background-color: #f0f0f0;
+}
+
+.items > td {
+  text-align: center;
+}
+
+.items > td:not(:last-child) {
+  border-right: 1px solid var(--semiBlack);
+}
