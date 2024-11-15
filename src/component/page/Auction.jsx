@@ -87,8 +87,7 @@ export default function Auction({ pageType }) {
 
   return (
     <div>
-      <div className="h-5"></div>
-      <div className="flex justify-center items-center gap-2.5">
+      <div className="flex justify-center items-center gap-2.5 mt-5">
         {/* 대분류 선택 */}
         <ReactSelect
           inputId="main-category-select"

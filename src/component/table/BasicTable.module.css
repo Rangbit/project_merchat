@@ -14,13 +14,13 @@
 }
 
 .header > th:not(:last-child) {
-  border-right: 1px solid #a4a4a4;
+  border-right: 1px solid var(--gray01);
 }
 
 .items {
   height: 48px;
   background-color: white;
-  border-top: 1px solid #a4a4a4;
+  border-top: 1px solid var(--gray01);
 }
 
 .items:hover {
@@ -33,4 +33,9 @@
 
 .items > td:not(:last-child) {
   border-right: 1px solid var(--semiBlack);
+}
+
+/* 페이징 */
+button.active {
+  color: red;
 }

@@ -1,8 +1,9 @@
-import React, { forwardRef, useState, useRef } from "react";
+import React, { forwardRef, useState, useRef, useEffect, useMemo } from "react";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import style from "./BasicTable.module.css";
@@ -22,14 +23,19 @@ const BasicTable = forwardRef(
     const [hoveredRow, setHoveredRow] = useState(null);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [pageIndex, setPageIndex] = useState(currentPagePosition - 1); // 현재 페이지 인덱스 (0부터 시작)
+    const [sorting, setSorting] = useState([]); // 정렬 상태 추가
 
     const hoverTimeoutRef = useRef(null); // hover 딜레이를 위한 ref
-    const itemsPerPage = 500; // 페이지당 항목 수
+    const itemsPerPage = 10; // 페이지당 항목 수
     const totalPageCount = Math.ceil(
       (data.auction_item?.length || 0) / itemsPerPage
     );
 
     const columnHelper = createColumnHelper();
+
+    useEffect(() => {
+      setIsData(data.auction_item || "");
+    }, [data]);
 
     // headers를 기반으로 컬럼 동적 생성
     const columns = headers.map((header) =>
@@ -69,31 +75,46 @@ const BasicTable = forwardRef(
       })
     );
 
+    // 전체 데이터를 정렬한 후 현재 페이지의 데이터를 슬라이싱하여 페이징 처리
+    const sortedData = useMemo(() => {
+      const sorted = [...(data.auction_item || [])];
+      // 전체 데이터 기준으로 정렬 적용
+      if (sorting.length > 0) {
+        sorted.sort((a, b) => {
+          for (const sort of sorting) {
+            const { id, desc } = sort;
+            if (a[id] < b[id]) return desc ? 1 : -1;
+            if (a[id] > b[id]) return desc ? -1 : 1;
+          }
+          return 0;
+        });
+      }
+      const startIdx = pageIndex * itemsPerPage;
+      return sorted.slice(startIdx, startIdx + itemsPerPage);
+    }, [data, sorting, pageIndex, itemsPerPage]);
+
     const table = useReactTable({
-      data:
-        data.auction_item?.slice(
-          pageIndex * itemsPerPage,
-          (pageIndex + 1) * itemsPerPage
-        ) || [],
+      data: sortedData, // 정렬 및 페이징된 데이터 전달
       columns,
+      state: {
+        sorting,
+      },
+      onSortingChange: setSorting, // 정렬 변경 핸들러 추가
       getCoreRowModel: getCoreRowModel(),
+      getSortedRowModel: getSortedRowModel(), // 정렬 기능 추가
     });
 
     const handleMouseEnter = (rowData) => {
-      // 기존 타이머가 있다면 초기화
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
       }
-
-      // 500ms 딜레이 후 팝업을 보여줌
       hoverTimeoutRef.current = setTimeout(() => {
         setHoveredRow(rowData);
         setIsPopUpOpen(true);
-      }, 500);
+      }, 200);
     };
 
     const handleMouseLeave = () => {
-      // 타이머가 설정된 경우 이를 취소하고 즉시 팝업을 닫음
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
       }
@@ -121,11 +142,18 @@ const BasicTable = forwardRef(
                   <th
                     key={header.id}
                     style={{ width: headers[index].width + "%" }}
+                    onClick={header.column.getToggleSortingHandler()} // 클릭 시 정렬 핸들러 추가
                   >
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
                     )}
+                    {/* 정렬 아이콘 표시 */}
+                    {header.column.getIsSorted() === "asc"
+                      ? " ▲"
+                      : header.column.getIsSorted() === "desc"
+                      ? " ▼"
+                      : " ⬍"}
                   </th>
                 ))}
               </tr>
@@ -148,10 +176,9 @@ const BasicTable = forwardRef(
             ))}
           </tbody>
         </table>
-        {isPopUpOpen && hoveredRow && <Popup data={hoveredRow} />}
-
-        {/* {paginationEnabled && (
-          <div className="pagination">
+        <div className="h-5"></div>
+        {paginationEnabled && (
+          <div className="flex items-center justify-center gap-3 text-lg">
             <button
               onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
               disabled={pageIndex === 0}
@@ -162,7 +189,11 @@ const BasicTable = forwardRef(
               <button
                 key={pageNum}
                 onClick={() => setPageIndex(pageNum - 1)}
-                className={pageIndex === pageNum - 1 ? "active" : ""}
+                className={
+                  pageIndex === pageNum - 1
+                    ? "active font-semibold text-siamBlack"
+                    : "text-semiBlack"
+                }
               >
                 {pageNum}
               </button>
@@ -176,7 +207,10 @@ const BasicTable = forwardRef(
               다음
             </button>
           </div>
-        )} */}
+        )}
+        <div className="h-10"></div>
+        {/* popup */}
+        {isPopUpOpen && hoveredRow && <Popup data={hoveredRow} />}
       </div>
     );
   }

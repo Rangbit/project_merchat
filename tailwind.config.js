@@ -12,6 +12,8 @@ module.exports = {
         foreground: "var(--foreground)",
         siamBlack: "var(--siamBlack)",
         semiBlack: "var(--semiBlack)",
+        semiWhite: "var(--semiWhite)",
+        gray01: "var(--gray01)",
       },
     },
   },

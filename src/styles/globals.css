@@ -7,6 +7,8 @@
   --foreground: #171717;
   --siamBlack: #020715;
   --semiBlack: #393732;
+  --semiWhite: #fafafa;
+  --gray01: #a4a4a4;
 }
 
 @media (prefers-color-scheme: dark) {
