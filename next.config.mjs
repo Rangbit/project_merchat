@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  images: {
+    domains: ["open.api.nexon.com"], // 외부 이미지를 로드할 도메인 추가
+  },
   async rewrites() {
     return [
       {

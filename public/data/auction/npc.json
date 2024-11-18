@@ -1,27 +1,23 @@
-{
-  "타라": [
-    "델렌",
-    "상인 라누",
-    "상인 피루",
-    "모락",
-    "상인 아루",
-    "리나",
-    "상인 누누"
-  ],
-  "기타": [
-    "델",
-    "상인 메루",
-    "켄",
-    "귀넥",
-    "얼리",
-    "데위",
-    "테일로",
-    "상인 세누",
-    "상인 베루",
-    "상인 에루",
-    "상인 네루",
-    "카디",
-    "인장 상인",
-    "피오나트"
-  ]
-}
+[
+  { "label": "npc1", "value": "델렌" },
+  { "label": "npc2", "value": "상인 라누" },
+  { "label": "npc3", "value": "상인 피루" },
+  { "label": "npc4", "value": "모락" },
+  { "label": "npc5", "value": "상인 아루" },
+  { "label": "npc6", "value": "리나" },
+  { "label": "npc7", "value": "상인 누누" },
+  { "label": "npc8", "value": "델" },
+  { "label": "npc9", "value": "상인 메루" },
+  { "label": "npc10", "value": "켄" },
+  { "label": "npc11", "value": "귀넥" },
+  { "label": "npc12", "value": "얼리" },
+  { "label": "npc13", "value": "데위" },
+  { "label": "npc14", "value": "테일로" },
+  { "label": "npc15", "value": "상인 세누" },
+  { "label": "npc16", "value": "상인 베루" },
+  { "label": "npc17", "value": "상인 에루" },
+  { "label": "npc18", "value": "상인 네루" },
+  { "label": "npc19", "value": "카디" },
+  { "label": "npc20", "value": "인장 상인" },
+  { "label": "npc21", "value": "피오나트" }
+]
