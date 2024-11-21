@@ -169,7 +169,12 @@ const BasicTable = forwardRef(
               >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {cell.column.id === "auction_price_per_unit"
+                      ? Number(cell.getValue()).toLocaleString()
+                      : flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                   </td>
                 ))}
               </tr>

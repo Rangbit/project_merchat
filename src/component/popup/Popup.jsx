@@ -22,47 +22,49 @@ export default function Popup({ data }) {
     const setOptions = [];
     const colorOptions = [];
 
-    data.item_option.forEach((item) => {
-      if (
-        // 무기
-        item.option_type === "공격" ||
-        item.option_type === "부상률" ||
-        item.option_type === "크리티컬" ||
-        item.option_type === "밸런스" ||
-        item.option_type === "남은 전용 해제 가능 횟수" ||
-        // 방어구
+    if (data.item_option) {
+      data.item_option.forEach((item) => {
+        if (
+          // 무기
+          item.option_type === "공격" ||
+          item.option_type === "부상률" ||
+          item.option_type === "크리티컬" ||
+          item.option_type === "밸런스" ||
+          item.option_type === "남은 전용 해제 가능 횟수" ||
+          // 방어구
 
-        // 공통
-        item.option_type === "피어싱 레벨" ||
-        item.option_type === "숙련" ||
-        item.option_type === "내구력"
-      ) {
-        statusOptions.push(item);
-      }
-      if (item.option_type === "인챈트") {
-        enchantOptions.push(item);
-      }
-      if (item.option_type === "인챈트") {
-        upgradeOptions.push(item);
-      }
-      if (
-        item.option_type === "일반 개조" ||
-        item.option_type === "보석 개조" ||
-        item.option_type === "장인 개조" ||
-        item.option_type === "특별 개조"
-      ) {
-        craftWorkOptions.push(item);
-      }
-      if (item.option_type === "에르그") {
-        ergOptions.push(item);
-      }
-      if (item.option_type === "인챈트") {
-        setOptions.push(item);
-      }
-      if (item.option_type === "아이템 색상") {
-        colorOptions.push(item);
-      }
-    });
+          // 공통
+          item.option_type === "피어싱 레벨" ||
+          item.option_type === "숙련" ||
+          item.option_type === "내구력"
+        ) {
+          statusOptions.push(item);
+        }
+        if (item.option_type === "인챈트") {
+          enchantOptions.push(item);
+        }
+        if (item.option_type === "인챈트") {
+          upgradeOptions.push(item);
+        }
+        if (
+          item.option_type === "일반 개조" ||
+          item.option_type === "보석 개조" ||
+          item.option_type === "장인 개조" ||
+          item.option_type === "특별 개조"
+        ) {
+          craftWorkOptions.push(item);
+        }
+        if (item.option_type === "에르그") {
+          ergOptions.push(item);
+        }
+        if (item.option_type === "인챈트") {
+          setOptions.push(item);
+        }
+        if (item.option_type === "아이템 색상") {
+          colorOptions.push(item);
+        }
+      });
+    }
 
     setIsStatus(statusOptions);
     setIsEnchant(enchantOptions);
@@ -80,7 +82,7 @@ export default function Popup({ data }) {
       </div>
 
       {/* statusOptions */}
-      {/* {isStatus.length > 0 && (
+      {isStatus.length > 0 && (
         <div className="w-full p-3 mb-3 text-white border rounded border-gray01">
           {isStatus.map((option, index) => (
             <div key={index} className="mb-2">
@@ -96,7 +98,7 @@ export default function Popup({ data }) {
             </div>
           ))}
         </div>
-      )} */}
+      )}
 
       {/* colorOptions */}
       {isColor.length > 0 && (

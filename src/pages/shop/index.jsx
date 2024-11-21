@@ -10,14 +10,15 @@ export default function Shop() {
   const [npcOptions, setNpcOptions] = useState({});
   const [serverOptions, setServerOptions] = useState({});
   const [isServer, setIsServer] = useState("");
+  const [channelOptions, setChannelOptions] = useState({});
   const [isChannel, setIsChannel] = useState("");
   const [npcName, setNpcName] = useState("");
   const [itemType, setItemType] = useState("");
   const [isDownloadComplete, setIsDownloadComplete] = useState(false); // 다운로드 완료 상태
 
-  // npc list
   useEffect(() => {
-    const fetchCategories = async () => {
+    // npc list
+    const fetchNpc = async () => {
       try {
         const response = await fetch("/data/shop/npc.json");
         const data = await response.json();
@@ -27,21 +28,33 @@ export default function Shop() {
       }
     };
 
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
+    // server list
+    const fetchServer = async () => {
       try {
         const response = await fetch("/data/shop/server.json");
         const data = await response.json();
         setServerOptions(data);
+        console.log("server data:", data);
       } catch (error) {
-        console.error("카테고리 데이터를 가져오는 중 오류 발생:", error);
+        console.error("서버 데이터를 가져오는 중 오류 발생:", error);
       }
     };
 
-    fetchCategories();
+    // channel list
+    const fetchChannel = async () => {
+      try {
+        const response = await fetch("/data/shop/channel.json");
+        const data = await response.json();
+        setChannelOptions(data);
+        console.log("channel data:", data);
+      } catch (error) {
+        console.error("채널 데이터를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchNpc();
+    fetchServer();
+    fetchChannel();
   }, []);
 
   const fetchData = async () => {
@@ -50,8 +63,8 @@ export default function Shop() {
       const response = await axios.get("/api/npc_shop", {
         params: {
           npc_name: npcName || undefined,
-          server_name: "류트",
-          channel: 9,
+          server_name: isServer || "류트",
+          channel: isChannel || 9,
         },
       });
 
@@ -113,24 +126,15 @@ export default function Shop() {
 
   const handleReset = () => {
     setNpcName("");
+    setIsServer("");
+    setIsChannel("");
     setData(null);
     setIsDownloadComplete(false);
   };
 
   return (
     <>
-      <div className="flex justify-center items-center gap-2.5 mt-5">
-        {/* <ReactSelect
-          inputId="server-select"
-          placeholder="서버를 선택하세요"
-          options={serverOptions}
-          value={
-            isServer
-              ? serverOptions.find((option) => option.value === isServer)
-              : null
-          }
-          onChange={(selectedOption) => setIsServer(selectedOption.value)}
-        /> */}
+      <div className="flex justify-center items-center gap-2.5 mt-5 bg-white p-4 rounded-md">
         <ReactSelect
           inputId="npc-select"
           placeholder="NPC를 선택하세요"
@@ -142,6 +146,31 @@ export default function Shop() {
           }
           onChange={(selectedOption) => setNpcName(selectedOption.value)}
         />
+        <ReactSelect
+          inputId="server-select"
+          placeholder="서버를 선택하세요"
+          options={serverOptions}
+          value={
+            isServer
+              ? serverOptions.find((option) => option.value === isServer)
+              : null
+          }
+          onChange={(selectedOption) => setIsServer(selectedOption.value)}
+        />
+        <ReactSelect
+          inputId="channel-select"
+          placeholder="채널을 선택하세요"
+          options={channelOptions[isServer]}
+          value={
+            isChannel
+              ? channelOptions[isServer].find(
+                  (option) => option.value === isChannel
+                )
+              : null
+          }
+          onChange={(selectedOption) => setIsChannel(selectedOption.value)}
+          isDisabled={!isServer}
+        />
         <BasicButton onClick={handleSearch} innerText="검색" />
         <BasicButton onClick={handleReset} innerText="초기화" />
       </div>
@@ -150,16 +179,20 @@ export default function Shop() {
           <div className="flex flex-wrap justify-center items-center w-full max-w-[1080px] p-8">
             {data.map((item, subIndex) => {
               const sanitizedName = item.item_display_name.replace(/\s+/g, "_");
-              const localImageUrl = `/images/temp/${sanitizedName}.png`;
+              const timestamp = new Date().getTime(); // 타임스탬프 추가(다운로드 이미지로 path 갱신)
+              const localImageUrl = `/images/temp/${sanitizedName}.png?ts=${timestamp}`;
 
               console.log(localImageUrl, "localImageUrl");
 
               return (
-                <div key={subIndex} className="w-[180px] p-1 border">
+                <div
+                  key={subIndex}
+                  className="w-[180px] p-1 pt-4 border bg-white"
+                >
                   {/* 이미지 및 아이템 이름 */}
                   <div className="flex flex-col items-center justify-center w-full">
                     <img
-                      src={localImageUrl}
+                      src={item.image_url}
                       width={80}
                       height={80}
                       alt={sanitizedName}
@@ -168,13 +201,14 @@ export default function Shop() {
                       <ImageColorPalette imageUrl={localImageUrl} />
                     )}
                   </div>
-                  <div className="flex items-center justify-center w-full h-10 font-medium">
+                  <div className="flex items-center justify-center w-full h-10 font-medium text-center">
                     {item.item_display_name}
                   </div>
                   {/* 가격 정보 */}
                   {itemType === "통행증" && (
-                    <span className="flex items-center justify-center w-full h-10 font-medium">
-                      {item.price[0].price_value} {item.price[0].price_type}
+                    <span className="flex items-center justify-center w-full h-10 font-medium text-center">
+                      {Number(item.price[0].price_value).toLocaleString()}{" "}
+                      {item.price[0].price_type}
                     </span>
                   )}
                 </div>
