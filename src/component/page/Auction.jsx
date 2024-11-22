@@ -35,11 +35,13 @@ const sample_data = [
 export default function Auction({ pageType }) {
   const [data, setData] = useState(null);
   const [categories, setCategories] = useState({});
-  const [mainCategory, setMainCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("");
+  const [subCategories, setSubCategories] = useState({});
+  const [isCategory, setIsCategory] = useState("");
+  const [isSubCategory, setIsSubCategory] = useState("");
   const [itemName, setItemName] = useState("");
 
   useEffect(() => {
+    // 대분류
     const fetchCategories = async () => {
       try {
         const response = await fetch("/data/auction/categories.json");
@@ -49,8 +51,19 @@ export default function Auction({ pageType }) {
         console.error("카테고리 데이터를 가져오는 중 오류 발생:", error);
       }
     };
+    // 소분류
+    const fetchSubCategories = async () => {
+      try {
+        const response = await fetch("/data/auction/subCategories.json");
+        const data = await response.json();
+        setSubCategories(data);
+      } catch (error) {
+        console.error("서브 카테고리 데이터를 가져오는 중 오류 발생:", error);
+      }
+    };
 
     fetchCategories();
+    fetchSubCategories();
   }, []);
 
   const fetchData = async () => {
@@ -63,7 +76,7 @@ export default function Auction({ pageType }) {
     try {
       const response = await axios.get(axiosUrl, {
         params: {
-          auction_item_category: subCategory || undefined,
+          auction_item_category: isSubCategory || undefined,
           item_name: itemName || undefined,
         },
       });
@@ -79,49 +92,38 @@ export default function Auction({ pageType }) {
   };
 
   const handleReset = () => {
-    setMainCategory("");
-    setSubCategory("");
+    setIsCategory("");
+    setIsSubCategory("");
     setItemName("");
     setData(null);
   };
 
   return (
     <div>
-      <div className="flex justify-center items-center gap-2.5 mt-5">
-        {/* 대분류 선택 */}
+      <div className="flex justify-center items-center gap-2.5 mt-5 bg-white p-4 rounded-md">
         <ReactSelect
           inputId="main-category-select"
           placeholder="대분류를 선택하세요"
-          options={Object.keys(categories).map((category) => ({
-            value: category,
-            label: category,
-          }))}
+          options={categories}
           value={
-            mainCategory ? { value: mainCategory, label: mainCategory } : null
+            isCategory
+              ? categories.find((option) => option.value === isCategory)
+              : null
           }
-          onChange={(selectedOption) => {
-            setMainCategory(selectedOption.value);
-            setSubCategory("");
-          }}
+          onChange={(selectedOption) => setIsCategory(selectedOption.value)}
         />
-
-        {/* 소분류 선택 */}
         <ReactSelect
           inputId="sub-category-select"
           placeholder="소분류를 선택하세요"
-          options={
-            mainCategory
-              ? categories[mainCategory].map((subcategory) => ({
-                  value: subcategory,
-                  label: subcategory,
-                }))
-              : []
-          }
+          options={subCategories[isCategory]}
           value={
-            subCategory ? { value: subCategory, label: subCategory } : null
+            isSubCategory
+              ? subCategories[isCategory].find(
+                  (option) => option.value === isSubCategory
+                )
+              : null
           }
-          onChange={(selectedOption) => setSubCategory(selectedOption.value)}
-          isDisabled={!mainCategory}
+          onChange={(selectedOption) => setIsSubCategory(selectedOption.value)}
         />
         <BasicInput
           width={360}

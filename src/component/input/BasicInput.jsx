@@ -22,16 +22,16 @@ export default function BasicInput({
   };
   return (
     <div
-      className="relative flex"
+      className="relative flex items-center mt-1 border rounded"
       style={{
         width: width ? `${width}px` : "100%",
-        height: `${height}px`,
+        height: `calc(${height}px + 2px)`,
       }}
     >
       <input
         id={inputId}
         name={inputId}
-        className="w-full h-full p-[12px]"
+        className="w-full h-full p-[12px] rounded"
         type="text"
         value={inputValue}
         onFocus={onFocus}
